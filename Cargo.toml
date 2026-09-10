@@ -18,7 +18,7 @@ repository = "https://github.com/shuqi2077/RUDA/tree/main/ruCCL"
 resolver = "2"
 
 [features]
-cubecl = []
+ruda = []
 default = []
 doc = []
 orchestrator = [ "ruda-communication/websocket",]
