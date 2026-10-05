@@ -88,13 +88,13 @@ features = [ "std", "serde", "shared-bytes", "tensor-data", "id", "id-tests-std"
 
 [dependencies.ruda-tensor-config]
 path = "../ruda-tensor-config"
-version = "0.21.2"
+version = "0.21.3"
 default-features = false
 features = [ "std",]
 
 [dependencies.ruda-tensor]
 path = "../ruda-tensor"
-version = "0.21.20"
+version = "0.21.21"
 default-features = false
 features = [ "std",]
 
@@ -106,7 +106,7 @@ features = [ "data-service", "websocket",]
 
 [dependencies.ruda-tensor-wgpu]
 path = "../ruda-tensor-wgpu"
-version = "0.21.19"
+version = "0.21.20"
 features = [ "default",]
 default-features = false
 optional = true
