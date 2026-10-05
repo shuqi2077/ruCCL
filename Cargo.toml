@@ -1,7 +1,7 @@
 [package]
 edition = "2024"
 name = "ruCCL"
-version = "0.21.20"
+version = "0.21.21"
 authors = [ "nathanielsimard <nathaniel.simard.42@gmail.com>",]
 build = false
 autolib = false
@@ -82,7 +82,7 @@ default-features = false
 
 [dependencies.ruda-core]
 path = "../ruda-core"
-version = "0.1.4"
+version = "0.1.5"
 default-features = false
 features = [ "std", "serde", "shared-bytes", "tensor-data", "id", "id-tests-std",]
 
@@ -100,7 +100,7 @@ features = [ "std",]
 
 [dependencies.ruda-communication]
 path = "../ruda-communication"
-version = "0.21.18"
+version = "0.21.19"
 default-features = false
 features = [ "data-service", "websocket",]
 
@@ -116,7 +116,7 @@ version = "3.2.0"
 
 [dependencies.ruda-tensor-device]
 path = "../ruda-tensor-device"
-version = "0.21.20"
+version = "0.21.21"
 default-features = false
 features = [ "cuda-default",]
 optional = true
