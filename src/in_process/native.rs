@@ -5,6 +5,7 @@ use std::{
     collections::HashMap,
     error::Error,
     fmt::{Display, Formatter},
+    ops::Range,
     panic::{AssertUnwindSafe, catch_unwind},
     sync::{Arc, Condvar, Mutex},
 };
@@ -15,6 +16,8 @@ pub trait NativeCollectiveDevice: Clone + Send + Sync + 'static {
     type Tensor: Send + 'static;
     /// Owned tensor and producer-stream capture made on the submitting rank.
     type Prepared: Send + 'static;
+    /// Device-owned output buffers, scratch storage and stream dependencies.
+    type Work;
     /// Device preparation or collective execution failure.
     type Error: Error + Send + Sync + 'static;
     /// Capture the tensor and its producer stream, without downloading its elements.
@@ -23,13 +26,53 @@ pub trait NativeCollectiveDevice: Clone + Send + Sync + 'static {
         tensor: Self::Tensor,
         device: DeviceId,
     ) -> Result<Self::Prepared, Self::Error>;
-    /// Execute the agreed collective in rank order and complete its device streams.
-    fn all_reduce(
+    /// Validate inputs and clone them into device-local output buffers.
+    fn begin(
         &self,
         devices: &[DeviceId],
         inputs: &[Self::Prepared],
+    ) -> Result<Self::Work, Self::Error>;
+    fn elements(&self, work: &Self::Work) -> usize;
+    /// Transfer each rank's range to its successor, then add or overwrite there.
+    /// Transfers must remain device-to-device; all sends precede destination writes.
+    fn exchange(
+        &self,
+        work: &mut Self::Work,
+        ranges: &[Range<usize>],
+        reduce: bool,
+    ) -> Result<(), Self::Error>;
+    /// Apply final scaling and complete streams before returning owned outputs.
+    fn finish(
+        &self,
+        work: Self::Work,
         operation: ReduceOperation,
     ) -> Result<Vec<Self::Tensor>, Self::Error>;
+}
+
+/// ruCCL's device-resident Ring ReduceScatter + AllGather, in ordered rank space.
+/// Device adapters only execute range transfers and local arithmetic, not collectives.
+fn ring_all_reduce<D: NativeCollectiveDevice>(
+    device: &D,
+    devices: &[DeviceId],
+    inputs: &[D::Prepared],
+    operation: ReduceOperation,
+) -> Result<Vec<D::Tensor>, D::Error> {
+    let mut work = device.begin(devices, inputs)?;
+    let world = devices.len();
+    let chunks = crate::rank::layout::balanced_ranges(device.elements(&work), world);
+    for step in 0..world - 1 {
+        let ranges = (0..world)
+            .map(|rank| chunks[(rank + world - step) % world].clone())
+            .collect::<Vec<_>>();
+        device.exchange(&mut work, &ranges, true)?;
+    }
+    for step in 0..world - 1 {
+        let ranges = (0..world)
+            .map(|rank| chunks[(rank + 1 + world - step) % world].clone())
+            .collect::<Vec<_>>();
+        device.exchange(&mut work, &ranges, false)?;
+    }
+    device.finish(work, operation)
 }
 
 /// A collective failure delivered to every rank participating in the same generation.
@@ -145,7 +188,7 @@ impl<D: NativeCollectiveDevice> NativeCommunicator<D> {
                     .collect::<Result<Vec<_>, _>>()
                     .and_then(|inputs| {
                         catch_unwind(AssertUnwindSafe(|| {
-                            self.device.all_reduce(&self.devices, &inputs, agreed)
+                            ring_all_reduce(&self.device, &self.devices, &inputs, agreed)
                         }))
                         .map_err(|_| {
                             NativeCollectiveError("native collective executor panicked".into())
