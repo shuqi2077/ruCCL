@@ -291,7 +291,8 @@ impl<B: Backend> LocalCollectiveServer<B> {
         if let Some(global_params) = &global_params
             && self.global_client.is_none()
         {
-            let server = WsServer::new(global_params.data_service_port);
+            // Peer nodes on other hosts download tensors from this data service.
+            let server = WsServer::all_interfaces(global_params.data_service_port);
             let client = Node::new(&global_params.global_address, server);
             self.global_client = Some(client)
         }

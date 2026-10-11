@@ -151,7 +151,8 @@ impl GlobalOrchestrator {
 
 /// Start a global orchestrator with WebSocket on the given port
 pub async fn start_global_orchestrator(port: u16) {
-    let server = WsServer::new(port);
+    // Nodes on other hosts connect to the orchestrator.
+    let server = WsServer::all_interfaces(port);
     let res = GlobalOrchestrator::start(os_shutdown_signal(), server).await;
     if let Err(err) = res {
         log::error!("Global Collective Orchestrator error: {err:?}");
