@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ruccl-bridge"
+version = "0.1.0"
+requires-python = ">=3.10"
+description = "Native ruCCL ROCm, Metal and Vulkan buffer bindings"
+
+[project.optional-dependencies]
+torch = ["torch"]
+
+[tool.setuptools]
+packages = ["ruccl_bridge", "ruda_collectives"]

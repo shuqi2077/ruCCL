@@ -1,0 +1,25 @@
+[package]
+name = "ruccl-torch-bridge"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[features]
+default = ["cuda"]
+cuda = ["dep:cudarc"]
+rocm = ["dep:ruda-tensor-rocm"]
+wgpu = ["dep:ruda-tensor-wgpu", "dep:wgpu"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ruccl = { package = "ruCCL", path = "..", default-features = false }
+cudarc = { version = "=0.19.0", optional = true, default-features = false, features = ["std", "driver", "fallback-dynamic-loading", "cuda-12000"] }
+ruda-tensor = { path = "../../ruda-tensor", default-features = false, features = ["std"] }
+ruda-core = { path = "../../ruda-core", default-features = false, features = ["std"] }
+wgpu = { version = "29", optional = true, default-features = false, features = ["std", "wgsl", "vulkan", "metal"] }
+ruda-tensor-rocm = { path = "../../ruda-tensor-rocm", optional = true, default-features = false, features = ["std"] }
+ruda-tensor-wgpu = { path = "../../ruda-tensor-wgpu", optional = true, default-features = false, features = ["std", "wgsl"] }

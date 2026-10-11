@@ -19,7 +19,8 @@ impl<B: Backend, T: TensorElement> RankDevice<T> for TensorDevice<B> {
     fn alloc(&self, length: usize) -> Result<Self::Buffer, Self::Error> { self.allocate(length) }
 
     fn copy_to_device(&self, buffer: &Self::Buffer, values: &[T]) -> Result<(), Self::Error> {
-        self.write(buffer, values)
+        self.write(buffer, values)?;
+        self.synchronize()
     }
 
     fn copy_from_device(&self, buffer: &Self::Buffer) -> Result<Vec<T>, Self::Error> {
@@ -31,7 +32,8 @@ impl<B: Backend, T: TensorElement> RankDevice<T> for TensorDevice<B> {
     }
 
     fn copy_bytes_to_device_at(&self, buffer: &Self::Buffer, element_offset: usize, values: &[u8]) -> Result<(), Self::Error> {
-        self.write_at(buffer, element_offset, &element::decode::<T>(values)?)
+        self.write_at(buffer, element_offset, &element::decode::<T>(values)?)?;
+        self.synchronize()
     }
 
     fn copy_bytes_from_device_at(&self, buffer: &Self::Buffer, element_offset: usize, length: usize) -> Result<Vec<u8>, Self::Error> {
@@ -43,7 +45,8 @@ impl<B: Backend, T: TensorElement> RankDevice<T> for TensorDevice<B> {
     }
 
     fn launch_reduction(&self, kernel: &Self::Kernel, launch: &Self::ReductionLaunch, source: &Self::Buffer, destination: &Self::Buffer) -> Result<(), Self::Error> {
-        self.reduce(*kernel, launch, source, destination)
+        self.reduce(*kernel, launch, source, destination)?;
+        self.synchronize()
     }
 }
 
