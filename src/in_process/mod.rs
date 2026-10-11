@@ -3,6 +3,8 @@ pub mod collective;
 pub mod device;
 pub mod error;
 mod owner;
+#[cfg(feature = "native")]
+pub mod native;
 
 pub use buffer::{DistributedBuffer, RootedBuffer, VariableDistributedBuffer};
 pub use collective::PointToPointTransfer;

@@ -20,6 +20,7 @@ resolver = "2"
 [features]
 ruda = []
 default = []
+native = ["ruda-tensor/distributed"]
 doc = []
 orchestrator = [ "ruda-communication/websocket",]
 cuda = ["dep:ruda-tensor-device"]
