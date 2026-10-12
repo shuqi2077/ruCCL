@@ -6,6 +6,8 @@ use ruccl::rank::{AlgorithmPolicy, CollectiveTuning, ElementType,
 use std::{ffi::{CString,c_void},
     sync::{Arc,atomic::{AtomicU64,Ordering}},time::{Duration,Instant}};
 
+mod ipc;
+
 fn check(s:CUresult)->Result<(),Error> {if s==CUresult::CUDA_SUCCESS {Ok(())}else{Err(Error(format!("CUDA {s:?}")))}}
 const PTX:&str=r#".version 6.0
 .target sm_50
