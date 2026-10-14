@@ -49,7 +49,7 @@ impl Drop for TransferStream {
     }
 }
 
-fn reduction_ptx() -> String {
+pub(super) fn reduction_ptx() -> String {
     let mut code = ".version 6.0\n.target sm_50\n.address_size 64\n".to_owned();
     for (index, kind, width, registers) in [
         (0, "f32", 4, ".reg .f32 v,w,z;"),

@@ -9,6 +9,7 @@ publish = false
 [features]
 default = ["cuda"]
 cuda = ["dep:cudarc"]
+ucx = ["cuda", "dep:cc", "dep:pkg-config"]
 rocm = ["dep:ruda-tensor-rocm"]
 wgpu = ["dep:ruda-tensor-wgpu", "dep:wgpu"]
 
@@ -23,3 +24,7 @@ ruda-core = { path = "../../ruda-core", default-features = false, features = ["s
 wgpu = { version = "29", optional = true, default-features = false, features = ["std", "wgsl", "vulkan", "metal"] }
 ruda-tensor-rocm = { path = "../../ruda-tensor-rocm", optional = true, default-features = false, features = ["std"] }
 ruda-tensor-wgpu = { path = "../../ruda-tensor-wgpu", optional = true, default-features = false, features = ["std", "wgsl"] }
+
+[build-dependencies]
+cc = { version = "1", optional = true }
+pkg-config = { version = "0.3", optional = true }
