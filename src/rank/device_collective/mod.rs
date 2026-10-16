@@ -14,6 +14,7 @@ use std::ops::Range;
 use std::sync::atomic::{AtomicU64, Ordering};
 
 mod all_gather;
+mod all_gather_stream;
 mod all_to_all;
 mod direct;
 mod bounded_broadcast;

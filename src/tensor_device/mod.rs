@@ -11,6 +11,7 @@ mod reduction;
 mod storage;
 mod communicator;
 mod tensor;
+mod all_gather_matmul;
 mod bounded_broadcast;
 mod bounded_reduction;
 mod bounded_sharded;
