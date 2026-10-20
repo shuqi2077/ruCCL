@@ -30,9 +30,9 @@ def verify_bridge(worker, python_files, package_files, model_main):
     for name,content in package_files.items():
         path=source/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text(content)
     for name,content in python_files.items():
-        path=source/'ruda-torch/python/ruda_torch'/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text(content)
+        path=source/'crates/ruda-torch/python/ruda_torch'/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text(content)
     subprocess.run(['python','-m','pip','install','--no-cache-dir','--no-deps','--no-build-isolation',
-                    str(source/'ruCCL/torch-bridge/python')],check=True)
+                    str(source/'crates/ruCCL/torch-bridge/python')],check=True)
     env=os.environ.copy();env['RUCCL_TORCH_LIBRARY']=str(assets/'libruccl_torch_bridge.so')
     tree=ast.parse(worker)
     checks=ast.get_source_segment(worker,next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='bridge_checks'))

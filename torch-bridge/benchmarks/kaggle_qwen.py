@@ -9,22 +9,22 @@ import uuid
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 HERE=Path(__file__).resolve().parent
-ROOT=HERE.parents[2]
+ROOT=HERE.parents[3]
 API=KaggleApi();API.authenticate()
 USER=API.get_config_value('username')
 RUN=uuid.uuid4().hex[:6]
 FILES={name:(ROOT/name).read_text(encoding='utf-8') for name in (
-    'ruCCL/torch-bridge/Cargo.toml','ruCCL/torch-bridge/src/lib.rs',
-    'ruCCL/torch-bridge/src/cuda.rs','ruCCL/torch-bridge/src/tensor.rs',
-    'ruCCL/src/tensor_device/device.rs',
-    'ruCCL/torch-bridge/python/ruccl_bridge/__init__.py',
-    'ruCCL/torch-bridge/python/ruccl_bridge/benchmark.py',
-    'ruCCL/torch-bridge/python/pyproject.toml','ruCCL/torch-bridge/python/setup.py',
-    'ruCCL/torch-bridge/python/ruda_collectives/__init__.py',
-    'ruda-torch/python/ruda_torch/distributed_training.py',
-    'ruda-torch/python/ruda_torch/ruccl_transport.py',
-    'ruda-torch/python/ruda_torch/parallel_training.py',
-    'ruda-torch/python/ruda_torch/parallel_adapters.py')}
+    'crates/ruCCL/torch-bridge/Cargo.toml','crates/ruCCL/torch-bridge/src/lib.rs',
+    'crates/ruCCL/torch-bridge/src/cuda.rs','crates/ruCCL/torch-bridge/src/tensor.rs',
+    'crates/ruCCL/src/tensor_device/device.rs',
+    'crates/ruCCL/torch-bridge/python/ruccl_bridge/__init__.py',
+    'crates/ruCCL/torch-bridge/python/ruccl_bridge/benchmark.py',
+    'crates/ruCCL/torch-bridge/python/pyproject.toml','crates/ruCCL/torch-bridge/python/setup.py',
+    'crates/ruCCL/torch-bridge/python/ruda_collectives/__init__.py',
+    'crates/ruda-torch/python/ruda_torch/distributed_training.py',
+    'crates/ruda-torch/python/ruda_torch/ruccl_transport.py',
+    'crates/ruda-torch/python/ruda_torch/parallel_training.py',
+    'crates/ruda-torch/python/ruda_torch/parallel_adapters.py')}
 
 
 def submit(kind,program,source=None,accelerator=None):
@@ -86,7 +86,7 @@ if __name__=='__main__':
         program=(HERE/'prepare_remote.py').read_text(encoding='utf-8')+'\ntry:\n    prepare('+repr(FILES)+')\nexcept Exception as error:\n    print("QWEN_FAILURE "+str(error),flush=True)\n    raise\n'
         ast.parse(program)
         build=submit('prepare',program);monitor(build)
-    python_files={name:(ROOT/'ruda-torch/python/ruda_torch'/name).read_text(encoding='utf-8')
+    python_files={name:(ROOT/'crates/ruda-torch/python/ruda_torch'/name).read_text(encoding='utf-8')
                   for name in ('distributed_training.py','ruccl_transport.py','parallel_training.py','parallel_adapters.py')}
     previous=None
     if len(sys.argv)>2:

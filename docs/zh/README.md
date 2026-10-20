@@ -67,7 +67,7 @@ ruCCL 包含面向张量 Backend 的集合操作、rank 核心与进程内实现
 
 `cuda` feature 启用 CUDA 张量后端。运行 `cargo run --locked -p ruCCL --features cuda --example all_reduce`：在 GPU 0 上执行四个逻辑 rank 的 Ring AllReduce，检查 257 个 FP32 元素的 Sum／Mean、输入保持与会话退出。
 
-设备适配位于 [tensor_device](../../src/tensor_device)，优化器接口见[显式 rank 梯度归约](https://github.com/shuqi2077/RUDA/blob/main/ruda-optim/src/optim/grads/collective.rs)。传输包含 host-staged 路径，不是零拷贝 P2P。
+设备适配位于 [tensor_device](../../src/tensor_device)，优化器接口见[显式 rank 梯度归约](https://github.com/shuqi2077/RUDA/blob/main/crates/ruda-optim/src/optim/grads/collective.rs)。传输包含 host-staged 路径，不是零拷贝 P2P。
 
 源码：[集合 API](../../src/api.rs)、[配置](../../src/config.rs)、[rank](../../src/rank/mod.rs)、[进程内实现](../../src/in_process/mod.rs)。
 
@@ -84,4 +84,4 @@ cargo run --locked -p ruda-optim --features collective,cuda --example collective
 
 `run` 要求保存目录尚不存在；它在第一次更新后保存各 rank 的模型和优化器，再执行第二次更新。`resume` 从该目录恢复并执行第二次更新。启用 CUDA 时，这个示例的两个逻辑 rank 使用同一默认设备。
 
-完整调用见[集合通信训练示例](https://github.com/shuqi2077/RUDA/blob/main/ruda-optim/examples/collective_training.rs)；需要连同调度器和待累积梯度一起保存时，使用[训练状态保存](https://github.com/shuqi2077/RUDA/blob/main/docs/zh/training.md)中的 `TrainingRecord`。
+完整调用见[集合通信训练示例](https://github.com/shuqi2077/RUDA/blob/main/crates/ruda-optim/examples/collective_training.rs)；需要连同调度器和待累积梯度一起保存时，使用[训练状态保存](https://github.com/shuqi2077/RUDA/blob/main/docs/zh/training.md)中的 `TrainingRecord`。

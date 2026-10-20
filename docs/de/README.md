@@ -30,7 +30,7 @@ Der öffentliche Tensor API umfasst `register`, `all_reduce`, `reduce`, `broadca
 
 ## ruCCL Benutzerhandbuch
 
-[Computerbibliotheken](../../../docs/de/libraries/README.md) · [Tensoren und Frameworks](../../../docs/de/tensor-framework.md) · [中文](../zh/README.md)
+[Computerbibliotheken](../../../../docs/de/libraries/README.md) · [Tensoren und Frameworks](../../../../docs/de/tensor-framework.md) · [中文](../zh/README.md)
 
 ### 1. Ebenen und Einstiegspunkte
 
@@ -86,4 +86,4 @@ cargo run --locked -p ruda-optim --features collective,cuda --example collective
 
 `run` erfordert ein Verzeichnis, das noch nicht existiert. Es speichert das Modell und den Optimierer jedes Rangs nach der ersten Aktualisierung und führt dann die zweite Aktualisierung aus. `resume` stellt dieses Verzeichnis wieder her und führt das zweite Update aus. Wenn CUDA aktiviert ist, verwenden beide logischen Ränge in diesem Beispiel dasselbe Standardgerät.
 
-Die vollständige Anrufsequenz finden Sie im [Beispiel für ein gemeinsames Training](../../../ruda-optim/examples/collective_training.rs). Um auch den Planerstatus und die ausstehenden akkumulierten Verläufe zu speichern, verwenden Sie `TrainingRecord` aus [Trainings- und Speicherstatus](../../../docs/de/training.md).
+Die vollständige Anrufsequenz finden Sie im [Beispiel für ein gemeinsames Training](../../../ruda-optim/examples/collective_training.rs). Um auch den Planerstatus und die ausstehenden akkumulierten Verläufe zu speichern, verwenden Sie `TrainingRecord` aus [Trainings- und Speicherstatus](../../../../docs/de/training.md).

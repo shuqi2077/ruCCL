@@ -14,7 +14,7 @@ readme = "README.md"
 keywords = [ "deep-learning", "machine-learning", "collective",]
 categories = [ "science",]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/shuqi2077/RUDA/tree/main/ruCCL"
+repository = "https://github.com/shuqi2077/RUDA/tree/main/crates/ruCCL"
 resolver = "2"
 
 [features]
