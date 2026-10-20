@@ -7,7 +7,7 @@ from setuptools.command.build_py import build_py
 class BuildCollectives(build_py):
     def run(self):
         super().run()
-        source = Path(__file__).resolve().parents[4]/'crates/ruda-torch/python/ruda_torch'
+        source = Path(__file__).resolve().parents[3]/'ruda-torch/python/ruda_torch'
         if not (source/'distributed_training.py').is_file():
             raise RuntimeError('build ruccl-bridge from the RUDA source checkout')
         destination = Path(self.build_lib)/'ruda_collectives'

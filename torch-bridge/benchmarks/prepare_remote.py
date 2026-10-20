@@ -31,8 +31,8 @@ def prepare(files, *, bridge_features='cuda', include_model=True, check_backends
     package = assets/'ruda_collectives'; package.mkdir()
     (package/'__init__.py').write_text('from .distributed_training import ReplicaGroup\n')
     for name in ('distributed_training.py','ruccl_transport.py','parallel_training.py','parallel_adapters.py'):
-        shutil.copy2(root/'crates/ruda-torch/python/ruda_torch'/name, package/name)
-    bridge_package=root/'crates/ruCCL/torch-bridge/python/ruccl_bridge'
+        shutil.copy2(root/'ruda-torch/python/ruda_torch'/name, package/name)
+    bridge_package=root/'ruCCL/torch-bridge/python/ruccl_bridge'
     if bridge_package.is_dir(): shutil.copytree(bridge_package,assets/'ruccl_bridge')
     env = os.environ.copy()
     env.update(RUSTUP_HOME=str(temporary/'rustup'), CARGO_HOME=str(temporary/'cargo'),
@@ -84,7 +84,7 @@ def prepare(files, *, bridge_features='cuda', include_model=True, check_backends
         command=['cargo','build','--release','--message-format=json','--no-default-features','--features',bridge_features]
         if target is not None: command+=['--target',target]
         process = subprocess.Popen(command,
-            cwd=root/'crates/ruCCL/torch-bridge',env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+            cwd=root/'ruCCL/torch-bridge',env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
         for line in process.stdout:
             try: record=json.loads(line)
             except ValueError:
@@ -93,7 +93,7 @@ def prepare(files, *, bridge_features='cuda', include_model=True, check_backends
             if record.get('reason')=='compiler-message': print(record['message'].get('rendered',''),flush=True)
         if process.wait()!=0: raise RuntimeError('ruCCL bridge release build failed')
         filename='libruccl_torch_bridge.so' if target is None else 'ruccl_torch_bridge.dll'
-    build=root/'crates/ruCCL/torch-bridge/target'
+    build=root/'ruCCL/torch-bridge/target'
         if target is not None: build=build/target
         binary=build/'release'/filename
         shutil.copy2(binary,assets/filename)
@@ -103,7 +103,7 @@ def prepare(files, *, bridge_features='cuda', include_model=True, check_backends
                 if dependency in imports:
                     resolved=subprocess.run(['x86_64-w64-mingw32-gcc','-print-file-name='+dependency],capture_output=True,text=True,check=True).stdout.strip()
                     shutil.copy2(resolved,assets/dependency)
-    shutil.copy2(root/'crates/ruCCL/torch-bridge/Cargo.lock',assets/'Cargo.lock')
+    shutil.copy2(root/'ruCCL/torch-bridge/Cargo.lock',assets/'Cargo.lock')
         if check_backends:
             commands=[('rocm_check',['cargo','check','--no-default-features','--features','rocm']),
                       ('metal_target',['rustup','target','add','aarch64-apple-darwin']),
@@ -113,7 +113,7 @@ def prepare(files, *, bridge_features='cuda', include_model=True, check_backends
                 status.update(stage=stage,completed=completed,total=2,unit='ROCm and Metal compile checks',
                     checkpoint='compiled CUDA/Vulkan library and source; interrupted check restarts from source',
                     estimated_remaining_seconds=[30,1200],estimate_basis='two incremental backend checks; no GPU/model task')
-                process=subprocess.Popen(command,cwd=root/'crates/ruCCL/torch-bridge',env=env)
+                process=subprocess.Popen(command,cwd=root/'ruCCL/torch-bridge',env=env)
                 if process.wait()!=0: raise RuntimeError(stage+' failed')
                 if stage.endswith('_check'): completed+=1
         if include_model:

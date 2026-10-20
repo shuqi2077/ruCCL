@@ -1,6 +1,6 @@
 # ruCCL
 
-**English** | [简体中文](https://github.com/shuqi2077/RUDA/blob/main/crates/ruCCL/docs/zh/README.md) | [日本語](https://github.com/shuqi2077/RUDA/blob/main/crates/ruCCL/docs/ja/README.md) | [Deutsch](https://github.com/shuqi2077/RUDA/blob/main/crates/ruCCL/docs/de/README.md) | [Русский](https://github.com/shuqi2077/RUDA/blob/main/crates/ruCCL/docs/ru/README.md)
+**English** | [简体中文](https://github.com/shuqi2077/RUDA/blob/main/ruCCL/docs/zh/README.md) | [日本語](https://github.com/shuqi2077/RUDA/blob/main/ruCCL/docs/ja/README.md) | [Deutsch](https://github.com/shuqi2077/RUDA/blob/main/ruCCL/docs/de/README.md) | [Русский](https://github.com/shuqi2077/RUDA/blob/main/ruCCL/docs/ru/README.md)
 
 This crate is part of the RUDA workspace. Run the commands below from the [RUDA monorepo](https://github.com/shuqi2077/RUDA) root.
 
@@ -28,7 +28,7 @@ The registered tensor API includes `register`, `all_reduce`, `reduce`, `broadcas
 
 ## ruCCL User Guide
 
-[Compute libraries](https://github.com/shuqi2077/RUDA/blob/main/docs/en/libraries/README.md) · [Tensors and frameworks](https://github.com/shuqi2077/RUDA/blob/main/docs/en/tensor-framework.md) · [中文](https://github.com/shuqi2077/RUDA/blob/main/crates/ruCCL/docs/zh/README.md)
+[Compute libraries](https://github.com/shuqi2077/RUDA/blob/main/docs/en/libraries/README.md) · [Tensors and frameworks](https://github.com/shuqi2077/RUDA/blob/main/docs/en/tensor-framework.md) · [中文](https://github.com/shuqi2077/RUDA/blob/main/ruCCL/docs/zh/README.md)
 
 ### 1. Layers and entry points
 
@@ -67,9 +67,9 @@ Use `finish_collective` for normal completion. `reset_collective` forgets in-pro
 
 The `cuda` feature enables the CUDA tensor backend. Run `cargo run --locked -p ruCCL --features cuda --example all_reduce` to execute Ring AllReduce with four logical ranks on GPU 0. It checks Sum/Mean over 257 FP32 elements, input preservation, and session exit.
 
-Device adapters are in [tensor_device](https://github.com/shuqi2077/RUDA/tree/main/crates/ruCCL/src/tensor_device). For the optimizer interface, see [explicit-rank gradient reduction](https://github.com/shuqi2077/RUDA/blob/main/crates/ruda-optim/src/optim/grads/collective.rs). Transfers include a host-staged path, not zero-copy P2P.
+Device adapters are in [tensor_device](https://github.com/shuqi2077/RUDA/tree/main/ruCCL/src/tensor_device). For the optimizer interface, see [explicit-rank gradient reduction](https://github.com/shuqi2077/RUDA/blob/main/ruda-optim/src/optim/grads/collective.rs). Transfers include a host-staged path, not zero-copy P2P.
 
-Source: [collective API](https://github.com/shuqi2077/RUDA/blob/main/crates/ruCCL/src/api.rs), [configuration](https://github.com/shuqi2077/RUDA/blob/main/crates/ruCCL/src/config.rs), [rank](https://github.com/shuqi2077/RUDA/blob/main/crates/ruCCL/src/rank/mod.rs), and [in-process implementation](https://github.com/shuqi2077/RUDA/blob/main/crates/ruCCL/src/in_process/mod.rs).
+Source: [collective API](https://github.com/shuqi2077/RUDA/blob/main/ruCCL/src/api.rs), [configuration](https://github.com/shuqi2077/RUDA/blob/main/ruCCL/src/config.rs), [rank](https://github.com/shuqi2077/RUDA/blob/main/ruCCL/src/rank/mod.rs), and [in-process implementation](https://github.com/shuqi2077/RUDA/blob/main/ruCCL/src/in_process/mod.rs).
 
 ### 6. Collective training
 
@@ -84,12 +84,12 @@ cargo run --locked -p ruda-optim --features collective,cuda --example collective
 
 `run` requires a directory that does not yet exist. It saves each rank's model and optimizer after the first update, then executes the second update. `resume` restores that directory and executes the second update. With CUDA enabled, both logical ranks in this example use the same default device.
 
-See the [collective training example](https://github.com/shuqi2077/RUDA/blob/main/crates/ruda-optim/examples/collective_training.rs) for the complete call sequence. To also save scheduler state and pending accumulated gradients, use `TrainingRecord` from [Training and saving state](https://github.com/shuqi2077/RUDA/blob/main/docs/en/training.md).
+See the [collective training example](https://github.com/shuqi2077/RUDA/blob/main/ruda-optim/examples/collective_training.rs) for the complete call sequence. To also save scheduler state and pending accumulated gradients, use `TrainingRecord` from [Training and saving state](https://github.com/shuqi2077/RUDA/blob/main/docs/en/training.md).
 
 ### 7. Explicit-rank tensor collectives
 
 `RankCommunicator<TensorDevice<B>>` exposes floating `broadcast_float`, `all_reduce_float`, `all_gather_float` and `reduce_scatter_float`, plus the corresponding I32/I64 operations. Gather concatenates equal axis-zero shards in rank order; scatter requires axis zero to divide evenly by world size. Integer tensors retain their storage width without floating-point conversion. Tensor payloads use the existing host-staged transport, not native NCCL or zero-copy P2P.
 
-For tracked tensors, use `ruda_autodiff::collective::{all_gather, all_gather_dim, reduce_scatter_sum, reduce_scatter_sum_dim, reduce_scatter_mean, reduce_scatter_mean_dim, all_reduce_sum, all_reduce_mean, broadcast}`. All ranks must enter matching forward and backward operations, with matching dtypes, shapes, gradient tracking and root. See [differentiable rank collectives](https://github.com/shuqi2077/RUDA/blob/main/crates/ruda-autodiff/README.md) for the backward rules.
+For tracked tensors, use `ruda_autodiff::collective::{all_gather, all_gather_dim, reduce_scatter_sum, reduce_scatter_sum_dim, reduce_scatter_mean, reduce_scatter_mean_dim, all_reduce_sum, all_reduce_mean, broadcast}`. All ranks must enter matching forward and backward operations, with matching dtypes, shapes, gradient tracking and root. See [differentiable rank collectives](https://github.com/shuqi2077/RUDA/blob/main/ruda-autodiff/README.md) for the backward rules.
 
 `ruda_optim::data_parallel::DataParallel<B, C>` reuses replica validation, token/sample weighting, frozen/tied parameters and FP32 gradient output with a `DataParallelCommunicator<B::InnerBackend>`. The default is this ruCCL transport; [rust-ascend](https://github.com/shuqi2077/rust-ascend) supplies a native HCCL implementation with TCP used only for metadata.

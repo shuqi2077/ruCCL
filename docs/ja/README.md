@@ -30,7 +30,7 @@ cargo run -p ruCCL --features cuda --example all_reduce
 
 ## ruCCL ユーザーガイド
 
-[計算ライブラリ](../../../../docs/ja/libraries/README.md) · [テンソルとフレームワーク](../../../../docs/ja/tensor-framework.md) · [中文](../zh/README.md)
+[計算ライブラリ](../../../docs/ja/libraries/README.md) · [テンソルとフレームワーク](../../../docs/ja/tensor-framework.md) · [中文](../zh/README.md)
 
 ### 1. レイヤーとエントリーポイント
 
@@ -86,4 +86,4 @@ cargo run --locked -p ruda-optim --features collective,cuda --example collective
 
 `run` にはまだ存在しないディレクトリが必要です。最初の更新後に各ランクのモデルとオプティマイザーを保存し、2 番目の更新を実行します。 `resume` はそのディレクトリを復元し、2 番目の更新を実行します。 CUDA が有効になっている場合、この例の両方の論理ランクは同じデフォルト デバイスを使用します。
 
-完全な呼び出しシーケンスについては、[集合トレーニングの例](../../../ruda-optim/examples/collective_training.rs) を参照してください。スケジューラーの状態と保留中の累積勾配も保存するには、[トレーニングと状態の保存](../../../../docs/ja/training.md) の `TrainingRecord` を使用します。
+完全な呼び出しシーケンスについては、[集合トレーニングの例](../../../ruda-optim/examples/collective_training.rs) を参照してください。スケジューラーの状態と保留中の累積勾配も保存するには、[トレーニングと状態の保存](../../../docs/ja/training.md) の `TrainingRecord` を使用します。

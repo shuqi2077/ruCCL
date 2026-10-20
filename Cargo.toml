@@ -14,7 +14,7 @@ readme = "README.md"
 keywords = [ "deep-learning", "machine-learning", "collective",]
 categories = [ "science",]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/shuqi2077/RUDA/tree/main/crates/ruCCL"
+repository = "https://github.com/shuqi2077/RUDA/tree/main/ruCCL"
 resolver = "2"
 
 [features]
@@ -88,7 +88,7 @@ default-features = false
 features = [ "std", "serde", "shared-bytes", "tensor-data", "id", "id-tests-std",]
 
 [dependencies.ruda-tensor-config]
-path = "../ruda-tensor-config"
+path = "../ruda-tensor/config"
 version = "0.21.8"
 default-features = false
 features = [ "std",]
@@ -106,7 +106,7 @@ default-features = false
 features = [ "data-service", "websocket",]
 
 [dependencies.ruda-tensor-wgpu]
-path = "../ruda-tensor-wgpu"
+path = "../ruda-tensor/wgpu"
 version = "0.21.72"
 features = [ "default",]
 default-features = false
@@ -116,14 +116,14 @@ optional = true
 version = "3.2.0"
 
 [dependencies.ruda-tensor-device]
-path = "../ruda-tensor-device"
+path = "../ruda-tensor/device"
 version = "0.21.73"
 default-features = false
 features = [ "cuda-default",]
 optional = true
 
 [dev-dependencies.ruda-tensor-host]
-path = "../ruda-tensor-host"
+path = "../ruda-tensor/host"
 default-features = false
 features = [ "default",]
 
